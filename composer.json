@@ -1,0 +1,21 @@
+{
+    "authors": [
+        {
+            "email": "12965261+matthiez@users.noreply.github.com",
+            "homepage": "https://www.sms77.io",
+            "name": "André Matthies"
+        }
+    ],
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "description": "Telegram support for Live Helper Chat",
+    "homepage": "https://github.com/sms77io/LiveHelperChat",
+    "license": "MIT",
+    "name": "sms77/livehelperchat",
+    "require": {
+        "sms77/api": "dev-php5.6"
+    },
+    "type": "project",
+    "version": "1.0.0"
+}
