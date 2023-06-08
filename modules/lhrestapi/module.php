@@ -1,12 +1,12 @@
 <?php
-$Module = ['name' => 'Sms77 Rest API'];
+$Module = ['name' => 'Seven Rest API'];
 
 $ViewList = [
-    'sms77_create_sms' => [
+    'seven_create_sms' => [
         'functions' => [],
         'params' => [],
     ],
-    'sms77_phones' => [
+    'seven_phones' => [
         'functions' => [],
         'params' => [],
     ],

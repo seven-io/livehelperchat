@@ -1,7 +1,7 @@
 <?php
-/** php cron.php -s site_admin -e sms77 -c cron/update_structure */
+/** php cron.php -s site_admin -e seven -c cron/update_structure */
 
-$structure = file_get_contents('extension/sms77/doc/structure.json');
+$structure = file_get_contents('extension/seven/doc/structure.json');
 $structure = json_decode($structure, true);
 $queries = [];
 

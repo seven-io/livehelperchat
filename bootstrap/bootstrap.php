@@ -1,6 +1,6 @@
 <?php
 
-class erLhcoreClassExtensionSms77 {
+class erLhcoreClassExtensionSeven {
     private static $persistentSession;
     private $ahinstance;
     private $settings = [];
@@ -8,26 +8,26 @@ class erLhcoreClassExtensionSms77 {
     public static function getSession() {
         if (!isset (self::$persistentSession))
             self::$persistentSession = new ezcPersistentSession(ezcDbInstance::get(),
-                new ezcPersistentCodeManager ('./extension/sms77/pos'));
+                new ezcPersistentCodeManager ('./extension/seven/pos'));
         return self::$persistentSession;
     }
 
     public function run() {
         spl_autoload_register(static function ($class) {
             $classes = [
-                'erLhcoreClassModelSms77Chat' =>
-                    'extension/sms77/classes/erlhcoreclassmodelsms77chat.php',
-                'erLhcoreClassModelSms77Phone' =>
-                    'extension/sms77/classes/erlhcoreclassmodelsms77phone.php',
-                'erLhcoreClassSms77Validator' =>
-                    'extension/sms77/classes/erlhcoreclasssms77validator.php',
+                'erLhcoreClassModelSevenChat' =>
+                    'extension/seven/classes/erlhcoreclassmodelsevenchat.php',
+                'erLhcoreClassModelSevenPhone' =>
+                    'extension/seven/classes/erlhcoreclassmodelsevenphone.php',
+                'erLhcoreClassSevenValidator' =>
+                    'extension/seven/classes/erlhcoreclasssevenvalidator.php',
             ];
 
             if (array_key_exists($class, $classes)) require_once $classes[$class];
         });
 
-        $this->settings = include 'extension/sms77/settings/settings.ini.php';
-        require_once 'extension/sms77/vendor/autoload.php';
+        $this->settings = include 'extension/seven/settings/settings.ini.php';
+        require_once 'extension/seven/vendor/autoload.php';
 
         if ($this->settings['ahenviroment'] === true)
             $this->ahinstance = erLhcoreClassInstance::getInstance();
@@ -38,27 +38,27 @@ class erLhcoreClassExtensionSms77 {
         $dispatcher->listen('chat.desktop_client_admin_msg', [$this, 'sendSMSUser']);
         $dispatcher->listen('chat.web_add_msg_admin', [$this, 'sendSMSUser']);
         $dispatcher->listen('restapi.chats_filter', function (array &$params) {
-            if (isset($_GET['sms77_sms_chat'])
-                && (string)$_GET['sms77_sms_chat'] === 'true')
-                $params['filter']['innerjoin']['lhc_sms77_chat'] =
-                    ['`lh_chat`.`id`', '`lhc_sms77_chat`.`chat_id`'];
+            if (isset($_GET['seven_sms_chat'])
+                && (string)$_GET['seven_sms_chat'] === 'true')
+                $params['filter']['innerjoin']['lhc_seven_chat'] =
+                    ['`lh_chat`.`id`', '`lhc_seven_chat`.`chat_id`'];
         });
         $dispatcher->listen('restapi.swagger', function (array &$params) {
             $params['chats_parameters'] .= '{
             "default": false,
-            "description": "Include only sms77 sms chats",
+            "description": "Include only seven sms chats",
             "in": "query",
-            "name": "sms77_sms_chat",
+            "name": "seven_sms_chat",
             "type": "boolean",
             "required": false
         },';
 
-            $params['append_paths'] .= ',"/restapi/sms77_create_sms": {
+            $params['append_paths'] .= ',"/restapi/seven_create_sms": {
       "post": {
         "description": "",
         "produces": ["application/json"],
         "summary": "Send SMS to visitor",
-        "tags": ["sms77"],
+        "tags": ["seven"],
         "parameters": [
             {
               "in": "body",
@@ -66,7 +66,7 @@ class erLhcoreClassExtensionSms77 {
               "description": "Bot object that needs to be added to the lhc",
               "required": true,
               "schema": {
-                "$ref": "#/definitions/Sms77SMS"
+                "$ref": "#/definitions/SevenSMS"
               }
             }
         ],
@@ -88,12 +88,12 @@ class erLhcoreClassExtensionSms77 {
           }
         ]
       }
-    },"/restapi/sms77_phones": {
+    },"/restapi/seven_phones": {
       "get": {
         "tags": [
-          "sms77"
+          "seven"
         ],
-        "summary": "Returns list of registered Sms77 phones",
+        "summary": "Returns list of registered Seven phones",
         "description": "",
         "produces": [
           "application/json"
@@ -102,7 +102,7 @@ class erLhcoreClassExtensionSms77 {
         ],
         "responses": {
           "200": {
-            "description": "List of registered Sms77 phones returned",
+            "description": "List of registered Seven phones returned",
             "schema": {
             }
           },
@@ -120,7 +120,7 @@ class erLhcoreClassExtensionSms77 {
       }
     }';
 
-            $params['append_definitions'] .= '"Sms77SMS": {
+            $params['append_definitions'] .= '"SevenSMS": {
       "type": "object",
       "properties": {
         "msg": {
@@ -147,8 +147,8 @@ class erLhcoreClassExtensionSms77 {
           "required": false,
           "type": "string"
         },
-        "sms77_phone_id": {
-          "description": "Sms77 phone ID",
+        "seven_phone_id": {
+          "description": "Seven phone ID",
           "required": true,
           "type": "string"
         }
@@ -157,7 +157,7 @@ class erLhcoreClassExtensionSms77 {
         "create_chat" : true,
         "msg" : "Message to visitor",
         "phone_number" : "+37065272xxx",
-        "sms77_phone_id" : 1
+        "seven_phone_id" : 1
       }
     },';
         });
@@ -165,8 +165,8 @@ class erLhcoreClassExtensionSms77 {
         $dispatcher->listen('xml.lists', function (array &$params) {
             $chats = erLhcoreClassModelChat::getList([
                 'filterin' => ['status' => [0, 1]],
-                'innerjoin' => ['lhc_sms77_chat' =>
-                    ['`lh_chat`.`id`', '`lhc_sms77_chat`.`chat_id`']],
+                'innerjoin' => ['lhc_seven_chat' =>
+                    ['`lh_chat`.`id`', '`lhc_seven_chat`.`chat_id`']],
                 'limit' => 10,
                 'sort' => '`lh_chat`.`id` DESC',
             ]);
@@ -175,7 +175,7 @@ class erLhcoreClassExtensionSms77 {
                 ['department_name', 'user_status_front', 'phone'],
                 ['updateIgnoreColumns', 'department', 'user']);
 
-            $params['list']['sms77_chats'] = [
+            $params['list']['seven_chats'] = [
                 'column_names' => [
                     'chat_locale' => 'Visitor language',
                     'city' => 'City',
@@ -254,7 +254,7 @@ class erLhcoreClassExtensionSms77 {
      * @desc Sends SMS to user as manual action.
      */
     public function sendManualMessage($params) {
-        $tPhone = erLhcoreClassModelSms77Phone::fetch($params['sms77_phone_id']);
+        $tPhone = erLhcoreClassModelSevenPhone::fetch($params['seven_phone_id']);
 
         // Prepend Signature if Telegram extension is used
         $signatureText = '';
@@ -298,13 +298,13 @@ class erLhcoreClassExtensionSms77 {
         }
 
         $chat->chat_variables = json_encode([
-            'sms77_from' => $tPhone->from,
-            'sms77_phone_id' => $tPhone->id,
-            'sms77_sms_chat' => true,
+            'seven_from' => $tPhone->from,
+            'seven_phone_id' => $tPhone->id,
+            'seven_sms_chat' => true,
         ]);
         $chat->hash = erLhcoreClassChat::generateHash();
         $chat->nick = erTranslationClassLhTranslation::getInstance()
-                ->getTranslation('sms77/sms', 'SMS') . ' ' . $chat->phone;
+                ->getTranslation('seven/sms', 'SMS') . ' ' . $chat->phone;
         $chat->referrer = '';
         $chat->session_referrer = '';
         $chat->status = 1;
@@ -336,7 +336,7 @@ class erLhcoreClassExtensionSms77 {
     }
 
     private static function newChatModel($chat, $phone, $tPhone) {
-        $tChat = new erLhcoreClassModelSms77Chat;
+        $tChat = new erLhcoreClassModelSevenChat;
         $tChat->chat_id = $chat->id;
         $tChat->ctime = time();
         $tChat->phone = $phone;
@@ -371,7 +371,7 @@ class erLhcoreClassExtensionSms77 {
         if ($this->settings['debug']) erLhcoreClassLog::write(var_dump($_POST));
 
         $res = erLhcoreClassChatEventDispatcher::getInstance()
-            ->dispatch('sms77.process_callback', $_POST);
+            ->dispatch('seven.process_callback', $_POST);
 
         if ($res !== false
             && $res['status'] === erLhcoreClassChatEventDispatcher::STOP_WORKFLOW)
@@ -379,35 +379,35 @@ class erLhcoreClassExtensionSms77 {
 
         if (!isset($_POST['system'])) throw new Exception('Invalid recipient');
 
-        $sms77Phone = erLhcoreClassModelSms77Phone::findOne(
+        $sevenPhone = erLhcoreClassModelSevenPhone::findOne(
             ['filter' => ['phone' => $_POST['system']]]);
 
-        if (!$sms77Phone) $sms77Phone = erLhcoreClassModelSms77Phone::findOne(
+        if (!$sevenPhone) $sevenPhone = erLhcoreClassModelSevenPhone::findOne(
             ['filter' => ['phone' => str_replace('+', '', $_POST['system'])]]);
 
-        if (!$sms77Phone) {
-            $sms77Phone = erLhcoreClassModelSms77Phone::findOne(['customfilter' =>
+        if (!$sevenPhone) {
+            $sevenPhone = erLhcoreClassModelSevenPhone::findOne(['customfilter' =>
                 ['concat(`base_phone`, `phone`) = '
                     . ezcDbInstance::get()->quote($_POST['system'])]]);
 
-            // replace from all passed variables + as in Sms77 this number was without + in front
-            if ($sms77Phone) {
+            // replace from all passed variables + as in Seven this number was without + in front
+            if ($sevenPhone) {
                 $_POST['sender'] =
-                    str_replace($sms77Phone->base_phone, '', $_POST['sender']);
+                    str_replace($sevenPhone->base_phone, '', $_POST['sender']);
                 $_POST['system'] =
-                    str_replace($sms77Phone->base_phone, '', $_POST['system']);
+                    str_replace($sevenPhone->base_phone, '', $_POST['system']);
             }
         }
 
-        if (($this->settings['ahenviroment'] === false && $sms77Phone === false)
+        if (($this->settings['ahenviroment'] === false && $sevenPhone === false)
             || ($this->settings['ahenviroment'] === true
                 && !array_key_exists($_POST['system'],
                     $this->ahinstance->phone_number_departments)))
             throw new Exception('Invalid recipient');
 
-        $tChat = erLhcoreClassModelSms77Chat::findOne([
-            'filter' => ['phone' => $_POST['sender'], 'tphone_id' => $sms77Phone->id],
-            'filtergt' => ['utime' => time() - $sms77Phone->chat_timeout],
+        $tChat = erLhcoreClassModelSevenChat::findOne([
+            'filter' => ['phone' => $_POST['sender'], 'tphone_id' => $sevenPhone->id],
+            'filtergt' => ['utime' => time() - $sevenPhone->chat_timeout],
         ]);
 
         if ($tChat !== false && ($chat = $tChat->chat) !== false) {
@@ -441,10 +441,10 @@ class erLhcoreClassExtensionSms77 {
 
                 if (is_object($responder) && $responder->offline_message !== ''
                     && !self::isChatOnline($chat)) {
-                    if (!isset($chatVars['sms77_chat_timeout'])
-                        || $chatVars['sms77_chat_timeout']
-                        < time() - (int)$sms77Phone->responder_timeout) {
-                        $chatVars['sms77_chat_timeout'] = time();
+                    if (!isset($chatVars['seven_chat_timeout'])
+                        || $chatVars['seven_chat_timeout']
+                        < time() - (int)$sevenPhone->responder_timeout) {
+                        $chatVars['seven_chat_timeout'] = time();
                         $chat->chat_variables_array = $chatVars;
                         $chat->chat_variables = json_encode($chatVars);
 
@@ -500,7 +500,7 @@ class erLhcoreClassExtensionSms77 {
                 'chat.nodjshelper_notify_delay', ['chat' => &$chat, 'msg' => $msg]); // If operator has closed a chat we need force back office sync
 
             erLhcoreClassChatEventDispatcher::getInstance()->dispatch(
-                'sms77.sms_received', ['chat' => &$chat, 'msg' => $msg]); // general module signal that it has received an sms
+                'seven.sms_received', ['chat' => &$chat, 'msg' => $msg]); // general module signal that it has received an sms
 
             if ($renotify === true) erLhcoreClassChatEventDispatcher::getInstance()
                 ->dispatch('chat.restart_chat', ['chat' => &$chat, 'msg' => $msg]); // general module signal that it has received an sms
@@ -528,8 +528,8 @@ class erLhcoreClassExtensionSms77 {
 
             if ((int)$chat->dep_id === 0) {
                 if ($this->settings['ahenviroment'] === false
-                    && $sms77Phone->dep_id > 0) {
-                    $depId = $sms77Phone->dep_id;
+                    && $sevenPhone->dep_id > 0) {
+                    $depId = $sevenPhone->dep_id;
                     $department = erLhcoreClassModelDepartament::fetch($depId);
 
                     if ($department instanceof erLhcoreClassModelDepartament) {
@@ -552,16 +552,16 @@ class erLhcoreClassExtensionSms77 {
 
             $chat->hash = erLhcoreClassChat::generateHash();
             $chat->nick = erTranslationClassLhTranslation::getInstance()
-                    ->getTranslation('sms77/sms', 'SMS') . ' ' . $chat->phone;
+                    ->getTranslation('seven/sms', 'SMS') . ' ' . $chat->phone;
             $chat->pnd_time = time();
             $chat->referrer = '';
             $chat->session_referrer = '';
             $chat->status = 0;
             $chat->time = time();
             $chatVars = [
-                'sms77_from' => $_POST['system'],
-                'sms77_phone_id' => $sms77Phone->id,
-                'sms77_sms_chat' => true,
+                'seven_from' => $_POST['system'],
+                'seven_phone_id' => $sevenPhone->id,
+                'seven_sms_chat' => true,
             ];
             $chat->chat_variables = json_encode($chatVars);
             $chat->saveThis();
@@ -588,7 +588,7 @@ class erLhcoreClassExtensionSms77 {
 
                     if ($chat->last_msg_id < $msg->id) $chat->last_msg_id = $msg->id;
 
-                    $chatVars['sms77_chat_timeout'] = time();
+                    $chatVars['seven_chat_timeout'] = time();
                     $chat->chat_variables = json_encode($chatVars);
                     $chat->chat_variables_array = $chatVars;
                 }
@@ -596,7 +596,7 @@ class erLhcoreClassExtensionSms77 {
 
             $chat->saveThis();
 
-            self::newChatModel($chat, $_POST['sender'], $sms77Phone);
+            self::newChatModel($chat, $_POST['sender'], $sevenPhone);
 
             if (isset($messageResponder)) // auto responder has something to send to visitor
                 $this->sendSMSUser(['chat' => $chat, 'msg' => $messageResponder]);
@@ -605,7 +605,7 @@ class erLhcoreClassExtensionSms77 {
                 ->dispatch('chat.chat_started', ['chat' => &$chat, 'msg' => $msg]); // execute standard callback as chat was started
 
             erLhcoreClassChatEventDispatcher::getInstance()
-                ->dispatch('sms77.sms_received', ['chat' => &$chat, 'msg' => $msg]); // general module signal that it has received an sms
+                ->dispatch('seven.sms_received', ['chat' => &$chat, 'msg' => $msg]); // general module signal that it has received an sms
         }
     }
 
@@ -637,33 +637,33 @@ class erLhcoreClassExtensionSms77 {
 
         $chatVars = $params['chat']->chat_variables_array;
 
-        if (!isset($chatVars['sms77_sms_chat'])
-            || (int)$chatVars['sms77_sms_chat'] !== 1) return;
+        if (!isset($chatVars['seven_sms_chat'])
+            || (int)$chatVars['seven_sms_chat'] !== 1) return;
 
         try { // It's SMS chat we need to send a message
             $res = erLhcoreClassChatEventDispatcher::getInstance()
-                ->dispatch('sms77.send_sms_user', $params);
+                ->dispatch('seven.send_sms_user', $params);
 
             if ($res !== false && $res['status']
                 === erLhcoreClassChatEventDispatcher::STOP_WORKFLOW) // Check is module disabled
                 throw new Exception(erTranslationClassLhTranslation::getInstance()
-                    ->getTranslation('sms77/sms', 'Module is disabled for you!'));
+                    ->getTranslation('seven/sms', 'Module is disabled for you!'));
 
             if ($params['msg']->msg === '')
                 throw new Exception(erTranslationClassLhTranslation::getInstance()
-                    ->getTranslation('sms77/sms', 'Please enter a message!'));
+                    ->getTranslation('seven/sms', 'Please enter a message!'));
 
             if ($this->settings['ahenviroment'] === true
                 && (bool)$this->ahinstance->hard_limit_in_effect === true)
                 throw new Exception(erTranslationClassLhTranslation::getInstance()
-                    ->getTranslation('sms77/sms', 'SMS could not be send because
+                    ->getTranslation('seven/sms', 'SMS could not be send because
                      you have reached your SMS hard limit!'));
 
-            $phone = isset($chatVars['sms77_phone_id'])
-            && is_numeric($chatVars['sms77_phone_id']) ?
-                erLhcoreClassModelSms77Phone::fetch($chatVars['sms77_phone_id'])
-                : erLhcoreClassModelSms77Phone::findOne(
-                    ['filter' => ['phone' => $chatVars['sms77_from']]]);
+            $phone = isset($chatVars['seven_phone_id'])
+            && is_numeric($chatVars['seven_phone_id']) ?
+                erLhcoreClassModelSevenPhone::fetch($chatVars['seven_phone_id'])
+                : erLhcoreClassModelSevenPhone::findOne(
+                    ['filter' => ['phone' => $chatVars['seven_from']]]);
 
             $signatureText = ''; // Prepend Signature if Telegram extension is used
 
@@ -687,15 +687,15 @@ class erLhcoreClassExtensionSms77 {
                 'text' => $params['msg']->msg . $signatureText,
             ];
 
-            if (isset($chatVars['sms77_from'])
-                && $chatVars['sms77_from'] !== '')
+            if (isset($chatVars['seven_from'])
+                && $chatVars['seven_from'] !== '')
                 $paramsSend['from'] = $phone->base_phone
-                    . str_replace($phone->base_phone, '', $chatVars['sms77_from']);
+                    . str_replace($phone->base_phone, '', $chatVars['seven_from']);
 
             if ($this->settings['ahenviroment'] === true) {
-                $paramsSend['from'] = isset($chatVars['sms77_from'])
+                $paramsSend['from'] = isset($chatVars['seven_from'])
                     ? $phone->base_phone . // Use same sender as recipient
-                    str_replace($phone->base_phone, '', $chatVars['sms77_from'])
+                    str_replace($phone->base_phone, '', $chatVars['seven_from'])
                     : $this->ahinstance->phone_number_first;
 
                 $paramsSend['password'] =
@@ -705,11 +705,11 @@ class erLhcoreClassExtensionSms77 {
             $this->initClient($phone->api_key)->sms($paramsSend['recipient'],
                 $paramsSend['text'], ['from' => $paramsSend['from']]);
 
-            if (!isset($chatVars['sms77_sms_chat_send']))
-                $chatVars['sms77_sms_chat_send'] = 0;
+            if (!isset($chatVars['seven_sms_chat_send']))
+                $chatVars['seven_sms_chat_send'] = 0;
 
             $newMessagesCount = ceil(mb_strlen($params['msg']->msg) / 160);
-            $chatVars['sms77_sms_chat_send'] += $newMessagesCount;
+            $chatVars['seven_sms_chat_send'] += $newMessagesCount;
 
             $db = ezcDbInstance::get();
             $db->beginTransaction();
@@ -725,7 +725,7 @@ class erLhcoreClassExtensionSms77 {
                 $this->ahinstance->addSMSMessageSend($newMessagesCount);
 
             erLhcoreClassChatEventDispatcher::getInstance()
-                ->dispatch('sms77.sms_send_to_user', ['chat' => & $params['chat']]); // event that it has send an sms
+                ->dispatch('seven.sms_send_to_user', ['chat' => & $params['chat']]); // event that it has send an sms
 
             erLhcoreClassChatEventDispatcher::getInstance()
                 ->dispatch('chat.nodjshelper_notify_delay', ['chat' => &$params['chat']]);  // force back office sync if operator has closed a chat

@@ -1,6 +1,6 @@
 {
     "tables": {
-        "lhc_sms77_chat": [
+        "lhc_seven_chat": [
             {
                 "default": null,
                 "extra": "",
@@ -50,14 +50,14 @@
                 "type": "int(11)"
             }
         ],
-        "lhc_sms77_phone": [
+        "lhc_seven_phone": [
             {
                 "default": null,
                 "extra": "",
                 "field": "api_key",
                 "key": "",
                 "null": "NO",
-                "type": "varchar(35)"
+                "type": "varchar(90)"
             },
             {
                 "default": null,
@@ -118,8 +118,8 @@
         ]
     },
     "tables_create": {
-        "lhc_sms77_chat": "CREATE TABLE `lhc_sms77_chat` (  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `chat_id` bigint(20) unsigned NOT NULL, `phone` varchar(35) NOT NULL, `ctime` int(11) NOT NULL, `utime` int(11) NOT NULL, `tphone_id` int(11) NOT NULL, PRIMARY KEY (`id`),  KEY `phone_utime` (`phone`,`utime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
-        "lhc_sms77_phone": "CREATE TABLE `lhc_sms77_phone` (  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `base_phone` varchar(35) NOT NULL, `phone` varchar(35) NOT NULL,`from` varchar(16) NOT NULL, `api_key` varchar(90), `dep_id` int(11) unsigned NOT NULL, `chat_timeout` int(11) unsigned NOT NULL, `responder_timeout` int(11) unsigned NOT NULL, PRIMARY KEY (`id`), KEY `phone` (`phone`)) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        "lhc_seven_chat": "CREATE TABLE `lhc_seven_chat` (  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `chat_id` bigint(20) unsigned NOT NULL, `phone` varchar(35) NOT NULL, `ctime` int(11) NOT NULL, `utime` int(11) NOT NULL, `tphone_id` int(11) NOT NULL, PRIMARY KEY (`id`),  KEY `phone_utime` (`phone`,`utime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+        "lhc_seven_phone": "CREATE TABLE `lhc_seven_phone` (  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, `base_phone` varchar(35) NOT NULL, `phone` varchar(35) NOT NULL,`from` varchar(16) NOT NULL, `api_key` varchar(90), `dep_id` int(11) unsigned NOT NULL, `chat_timeout` int(11) unsigned NOT NULL, `responder_timeout` int(11) unsigned NOT NULL, PRIMARY KEY (`id`), KEY `phone` (`phone`)) ENGINE=InnoDB DEFAULT CHARSET=utf8"
     },
     "tables_data": {},
     "tables_data_identifier": {},

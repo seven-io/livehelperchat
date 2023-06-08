@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "37a8920aaced37cc5bd27d76d0280cdb",
+    "content-hash": "c7568ed377e35e173953235de3934720",
     "packages": [
         {
             "name": "sms77/api",
@@ -81,5 +81,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }

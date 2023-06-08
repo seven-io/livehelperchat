@@ -1,4 +1,4 @@
-CREATE TABLE `lhc_sms77_chat`
+CREATE TABLE `lhc_seven_chat`
 (
     `chat_id`   bigint(20) unsigned NOT NULL,
     `ctime`     int(11)             NOT NULL,
@@ -11,9 +11,9 @@ CREATE TABLE `lhc_sms77_chat`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE `lhc_sms77_phone`
+CREATE TABLE `lhc_seven_phone`
 (
-    `api_key`           varchar(90),
+    `api_key`           varchar(90) NOT NULL,
     `base_phone`        varchar(35)         NOT NULL,
     `chat_timeout`      int(11) unsigned    NOT NULL,
     `dep_id`            int(11) unsigned    NOT NULL,

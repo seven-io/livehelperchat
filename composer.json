@@ -1,18 +1,18 @@
 {
     "authors": [
         {
-            "email": "12965261+matthiez@users.noreply.github.com",
-            "homepage": "https://www.sms77.io",
+            "email": "a.matthies@seven.io",
+            "homepage": "https://www.seven.io",
             "name": "André Matthies"
         }
     ],
     "config": {
         "vendor-dir": "vendor"
     },
-    "description": "Telegram support for Live Helper Chat",
-    "homepage": "https://github.com/sms77io/LiveHelperChat",
+    "description": "seven SMS support for Live Helper Chat",
+    "homepage": "https://github.com/seven-io/LiveHelperChat",
     "license": "MIT",
-    "name": "sms77/livehelperchat",
+    "name": "seven.io/livehelperchat",
     "require": {
         "sms77/api": "dev-php5.6"
     },
